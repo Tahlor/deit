@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --gres=gpu:4
 #SBATCH -C 'rhel7&pascal'
-#SBATCH --mem 10666
-#SBATCH --exclusive
+#SBATCH --mem-per-cpu 32000M
+#SBATCH --ntasks 24
 #SBATCH --output="/lustre/scratch/grp/fslg_internn/deit/output/baseline.slurm"
 #SBATCH --time 36:00:00
 #SBATCH --mail-user=taylornarchibald@gmail.com   # email address
