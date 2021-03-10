@@ -34,9 +34,8 @@ bf2= pyfftw.empty_aligned((100,256, 129), dtype='complex128')
 print('number of threads:' , cpus)
 fft_object_a = pyfftw.FFTW(aa, af,axes=(0,1), flags=('FFTW_MEASURE',), direction='FFTW_FORWARD',threads=cpus)
 
+
 fft_object_b = pyfftw.FFTW(bb, bf2,axes=(1,2),flags=('FFTW_MEASURE',), direction='FFTW_FORWARD',threads=cpus)
-
-
 aa=a
 bb=b
 start = timer()
@@ -54,3 +53,10 @@ pyfftw_duration = (end - start)/10
 print(f"Speed up with pyFFTW: {numpy_duration/pyfftw_duration}")
 np.allclose(bf[:,:,:129],bf2)
 
+
+import torch
+start = timer()
+for i in range(10):
+    torch.fft.fft2(torch.Tensor(b), s=None, dim=(-2, -1), norm=None)
+end = timer()
+print("torch, 100 slices", (end - start)/10)
