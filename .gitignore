@@ -6,5 +6,6 @@ checkpoints/
 
 *.pth
 *.pt
-
+*.slurm
+core*
 .idea/

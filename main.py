@@ -136,6 +136,10 @@ def get_args_parser():
     # * Finetuning params
     parser.add_argument('--finetune', default='', help='finetune from checkpoint')
 
+    # FFT
+    parser.add_argument('--fft', default='baseline', choices=['baseline','fft_trunc','fft_baseline'],
+                        type=str, help='FFT preprocessing')
+
     # Dataset parameters
     parser.add_argument('--data-path', default='/datasets01/imagenet_full_size/061417/', type=str,
                         help='dataset path')
@@ -394,13 +398,14 @@ def main(args):
                     'args': args,
                 }, checkpoint_path)
 
-        if epoch % EVAL_FREQ == 0:
+        if epoch % EVAL_FREQ == 0 or epoch==args.epochs-1:
             test_stats = evaluate(data_loader_val, model, device)
 
-        print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
-        max_accuracy = max(max_accuracy, test_stats["acc1"])
-        print(f'Max accuracy: {max_accuracy:.2f}%')
-
+            print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
+            max_accuracy = max(max_accuracy, test_stats["acc1"])
+            print(f'Max accuracy: {max_accuracy:.2f}%')
+        else:
+            test_stats = {}
         log_stats = {**{f'train_{k}': v for k, v in train_stats.items()},
                      **{f'test_{k}': v for k, v in test_stats.items()},
                      'epoch': epoch,
