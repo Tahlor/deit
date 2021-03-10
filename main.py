@@ -24,6 +24,7 @@ from samplers import RASampler
 import models
 import utils
 
+EVAL_FREQ = 5
 
 def get_args_parser():
     parser = argparse.ArgumentParser('DeiT training and evaluation script', add_help=False)
@@ -393,7 +394,9 @@ def main(args):
                     'args': args,
                 }, checkpoint_path)
 
-        test_stats = evaluate(data_loader_val, model, device)
+        if epoch % EVAL_FREQ == 0:
+            test_stats = evaluate(data_loader_val, model, device)
+
         print(f"Accuracy of the network on the {len(dataset_val)} test images: {test_stats['acc1']:.1f}%")
         max_accuracy = max(max_accuracy, test_stats["acc1"])
         print(f'Max accuracy: {max_accuracy:.2f}%')
